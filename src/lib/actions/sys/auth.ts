@@ -43,7 +43,7 @@ export async function handleLoginForm(formData: FormData) {
     } else {
       return {
         success: false,
-        message: result.error
+        message: result.message
       }
     }
   } catch (error) {

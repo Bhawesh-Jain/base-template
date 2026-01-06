@@ -8,7 +8,7 @@ import sendSms from '../../utils/sms';
 type LoginResponse = {
   success: boolean;
   user?: UserData;
-  error: string;
+  message: string;
 };
 
 export class UserAuthRepository extends RepositoryBase {
@@ -65,7 +65,7 @@ export class UserAuthRepository extends RepositoryBase {
       if (recentAttempts[0].count >= 5) {
         return {
           success: false,
-          error: "Too many failed attempts. Please try again later."
+          message: "Too many failed attempts. Please try again later."
         };
       }
 
@@ -88,7 +88,7 @@ export class UserAuthRepository extends RepositoryBase {
         await this.logAttempt(null, identifier, password, false, ipAddress);
         return {
           success: false,
-          error: "Invalid credentials"
+          message: "Invalid credentials"
         };
       }
 
@@ -103,7 +103,7 @@ export class UserAuthRepository extends RepositoryBase {
         await this.logAttempt(user.id, identifier, password, false, ipAddress);
         return {
           success: false,
-          error: "Invalid credentials"
+          message: "Invalid credentials"
         };
       }
 
@@ -129,7 +129,7 @@ export class UserAuthRepository extends RepositoryBase {
       return {
         success: true,
         user: userObj,
-        error: ''
+        message: ''
       };
     } catch (error) {
       return this.handleError(error);
