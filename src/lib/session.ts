@@ -1,9 +1,10 @@
 import { SessionOptions, getIronSession, IronSession } from "iron-session";
 import { cookies } from "next/headers"
+import { Constants } from "./constant";
 
 export const sessionOptions: SessionOptions = {
   password: process.env.SECRET_KEY!, 
-  cookieName: "CommunityLoan",
+  cookieName: Constants.companyNameMono,
   cookieOptions: {
     httpOnly: true,
     maxAge: 24 * 60 * 60, 
