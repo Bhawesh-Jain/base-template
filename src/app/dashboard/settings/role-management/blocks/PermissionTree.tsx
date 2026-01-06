@@ -6,7 +6,7 @@ import { PermissionItem } from "@/lib/helpers/permission-helper";
 import { Container } from "@/components/ui/container";
 import { cn } from "@/lib/utils"
 import { SubmitButton } from "@/components/ui/submit-button";
-import { Role } from "@/lib/repositories/accessRepository";
+import { Role } from "@/lib/repositories/sys/accessRepository";
 import { Button } from "@/components/ui/button";
 
 export default function PermissionTree({

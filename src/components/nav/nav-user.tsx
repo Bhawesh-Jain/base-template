@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Form } from "../ui/form"
 import { Button } from "../ui/button"
-import { logout } from "@/lib/actions/auth"
+import { logout } from "@/lib/actions/sys/auth"
 import { useRouter } from "next/navigation"
 
 export function NavUser({

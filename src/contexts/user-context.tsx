@@ -1,6 +1,6 @@
 'use client'
 
-import { UserData } from "@/lib/actions/auth";
+import { UserData } from "@/lib/actions/sys/auth";
 import { createContext, useContext } from "react";
 
 

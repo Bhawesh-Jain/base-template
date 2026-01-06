@@ -1,10 +1,10 @@
 import { Container } from "@/components/ui/container";
 import { Column, DataTable } from "@/components/data-table/data-table";
-import { disableUser, getUsersByRoleId } from "@/lib/actions/settings";
-import { User } from "@/lib/repositories/userRepository";
+import { disableUser, getUsersByRoleId } from "@/lib/actions/sys/settings";
+import { User } from "@/lib/repositories/sys/userRepository";
 import { useEffect, useState } from "react";
 import { Heading, Paragraph, SubHeading } from "@/components/text/heading";
-import { Role } from "@/lib/repositories/accessRepository";
+import { Role } from "@/lib/repositories/sys/accessRepository";
 import AddUser from "./AddUser";
 import formatDate from "@/lib/utils/date";
 import { getUserDisplayClass, getUserStatus } from "@/lib/utils/user";

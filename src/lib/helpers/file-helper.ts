@@ -1,7 +1,7 @@
 import fs from 'fs';
 import fsPromises from 'fs/promises';
 import path from 'path';
-import { FileRepository } from '../repositories/fileRepository';
+import { FileRepository } from '../repositories/sys/fileRepository';
 import { DEFAULT_COMPANY_ID } from '../api/api-helper';
 import { File } from "fetch-blob/file.js";
 
@@ -94,7 +94,7 @@ export async function saveFile(
             fsPromises.unlink(targetPath).catch((err) => {
                 console.error('Error deleting file after log failure:', err);
             });
-            return { error: logResult.error, success: false };
+            return { error: logResult.message, success: false };
         }
 
         const fileId = logResult.result;
@@ -149,7 +149,7 @@ export async function deleteFile(
         var logResult = await new FileRepository(DEFAULT_COMPANY_ID).markFileInactive(identifier);
 
         if (!logResult.success) {
-            return { error: logResult.error, success: false };
+            return { error: logResult.message, success: false };
         }
 
         if (hardDelete) {
@@ -174,7 +174,7 @@ export async function deleteFileFromIdentifier(
     const fileRecord = await new FileRepository(DEFAULT_COMPANY_ID).getFileRecord(identifier, transaction);
 
     if (!fileRecord.success) {
-        return { error: fileRecord.error, success: false };
+        return { error: fileRecord.message, success: false };
     }
 
     const fileName = fileRecord.result.file_name;
@@ -191,7 +191,7 @@ export async function deleteFileFromIdentifier(
         }
 
         if (!logResult.success) {
-            return { error: logResult.error, success: false };
+            return { error: logResult.message, success: false };
         }
 
         if (hardDelete) {

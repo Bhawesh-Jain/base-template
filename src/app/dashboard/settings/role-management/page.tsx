@@ -3,13 +3,13 @@
 import { Container } from "@/components/ui/container"
 import { useState, useEffect } from "react"
 import { collectCheckedPermissions, PermissionItem } from "@/lib/helpers/permission-helper";
-import { getAllPermissions, getRoles, updateRolePermissions } from "@/lib/actions/settings";
+import { getAllPermissions, getRoles, updateRolePermissions } from "@/lib/actions/sys/settings";
 import RoleList from "./blocks/RoleList";
 import PermissionTree from "./blocks/PermissionTree";
 import Loading from "../../loading";
 import { useToast } from "@/hooks/use-toast";
 import EmptyList from "@/components/ui/empty-list";
-import { Role } from "@/lib/repositories/accessRepository";
+import { Role } from "@/lib/repositories/sys/accessRepository";
 
 export default function RoleSettings(
 

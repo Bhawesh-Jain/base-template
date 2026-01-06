@@ -11,7 +11,7 @@ import {
   SidebarMenu,
   SidebarRail
 } from "@/components/ui/sidebar"
-import { getSidebarData } from "@/lib/actions/sidebar"
+import { getSidebarData } from "@/lib/actions/sys/sidebar"
 import { redirect } from "next/navigation"
 import { useState, useEffect } from "react"
 import Loading from "@/app/dashboard/loading"

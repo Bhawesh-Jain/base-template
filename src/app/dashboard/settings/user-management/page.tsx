@@ -2,8 +2,8 @@
 
 import Loading from "@/app/dashboard/loading";
 import { Container } from "@/components/ui/container";
-import { getRoles } from "@/lib/actions/settings";
-import { Role } from "@/lib/repositories/accessRepository";
+import { getRoles } from "@/lib/actions/sys/settings";
+import { Role } from "@/lib/repositories/sys/accessRepository";
 import { useState, useEffect } from "react";
 import RoleList from "./blocks/RoleList";
 import EmptyList from "@/components/ui/empty-list";

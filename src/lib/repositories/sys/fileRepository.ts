@@ -1,6 +1,6 @@
-import { encrypt } from "../helpers/crypto-helper";
-import { QueryBuilder } from "../helpers/db-helper";
-import { RepositoryBase } from "../helpers/repository-base";
+import { encrypt } from "../../helpers/crypto-helper";
+import { QueryBuilder } from "../../helpers/db-helper";
+import { RepositoryBase } from "../../helpers/repository-base";
 import mysql from "mysql2/promise"
 
 

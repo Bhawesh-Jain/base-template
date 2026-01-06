@@ -1,5 +1,5 @@
 import { apiError, apiFailure } from "@/lib/api/api-helper";
-import { FileRepository } from "@/lib/repositories/fileRepository";
+import { FileRepository } from "@/lib/repositories/sys/fileRepository";
 import { createReadStream, existsSync } from "fs";
 import path from "path";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,7 +16,7 @@ export async function GET(
   }
 
   try {
-    const { success, result, error } = await new FileRepository("1").getFileRecord(id);
+    const { success, result, message: error } = await new FileRepository("1").getFileRecord(id);
     
     if (!success) {
       return apiFailure({ message: [error] });

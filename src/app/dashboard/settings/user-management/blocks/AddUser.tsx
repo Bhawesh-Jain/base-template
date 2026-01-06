@@ -10,8 +10,8 @@ import Loading from "@/app/dashboard/loading";
 import { useEffect, useState } from "react";
 import { DefaultFormSelect, DefaultFormTextField } from "@/components/ui/default-form-field";
 import { useUser } from "@/contexts/user-context";
-import { createUser, getBranches, getRoles } from "@/lib/actions/settings";
-import { Role } from "@/lib/repositories/accessRepository";
+import { createUser, getBranches, getRoles } from "@/lib/actions/sys/settings";
+import { Role } from "@/lib/repositories/sys/accessRepository";
 import { Branch } from "../../branch-management/blocks/AddBranch";
 import { MultiSelect } from "@/components/multi-select";
 import { Card, CardContent, CardDescription, CardTitle, CardHeader } from "@/components/ui/card";
@@ -103,7 +103,7 @@ export default function AddUser({
       } else {
         toast({
           title: "Error",
-          description: result.error,
+          description: result.message,
           variant: "destructive",
         });
       }

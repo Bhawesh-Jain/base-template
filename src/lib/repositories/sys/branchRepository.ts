@@ -1,5 +1,5 @@
-import { executeQuery, QueryBuilder } from "../helpers/db-helper";
-import { RepositoryBase } from "../helpers/repository-base";
+import { executeQuery, QueryBuilder } from "../../helpers/db-helper";
+import { RepositoryBase } from "../../helpers/repository-base";
 
 
 export class BranchRepository extends RepositoryBase {

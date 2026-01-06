@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { RepositoryBase } from '../helpers/repository-base';
-import { executeQuery, QueryBuilder } from '../helpers/db-helper';
-import { UserData } from '../actions/auth';
+import { RepositoryBase } from '../../helpers/repository-base';
+import { executeQuery, QueryBuilder } from '../../helpers/db-helper';
+import { UserData } from '../../actions/sys/auth';
 import { User } from './userRepository';
-import sendSms from '../utils/sms';
+import sendSms from '../../utils/sms';
 
 type LoginResponse = {
   success: boolean;

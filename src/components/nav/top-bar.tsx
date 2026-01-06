@@ -1,7 +1,7 @@
 'use client'
 import * as React from "react"
 import { Bell, HelpCircle, Search } from "lucide-react"
-import { UserData } from "@/lib/actions/auth"
+import { UserData } from "@/lib/actions/sys/auth"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,

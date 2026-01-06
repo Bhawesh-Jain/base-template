@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import AddRole from "./AddRole";
-import { Role } from "@/lib/repositories/accessRepository";
+import { Role } from "@/lib/repositories/sys/accessRepository";
 
 export default function RoleList({
   roles,

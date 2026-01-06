@@ -1,6 +1,6 @@
 "use server"
-import { SidebarRepository } from "../repositories/sidebarRepository";
-import { getSession } from "../session";
+import { SidebarRepository } from "../../repositories/sys/sidebarRepository";
+import { getSession } from "../../session";
 
 export async function getSidebarData() {
   const session = await getSession();

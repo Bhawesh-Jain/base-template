@@ -1,7 +1,7 @@
-import { QueryBuilder, executeQuery, withTransaction } from "../helpers/db-helper";
-import { RepositoryBase } from "../helpers/repository-base";
+import { QueryBuilder, executeQuery, withTransaction } from "../../helpers/db-helper";
+import { RepositoryBase } from "../../helpers/repository-base";
 import mysql from "mysql2/promise";
-import { getSession } from "../session";
+import { getSession } from "../../session";
 
 export class ProcessRepository extends RepositoryBase {
   constructor() {

@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form";
-import { createBranch, createRole } from "@/lib/actions/settings";
+import { createBranch, createRole } from "@/lib/actions/sys/settings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -73,7 +73,7 @@ export default function AddBranch({
     } else {
       toast({
         title: "Error",
-        description: result.error,
+        description: result.message,
         variant: "destructive"
       })
     }

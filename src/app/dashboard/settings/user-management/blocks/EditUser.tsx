@@ -10,8 +10,8 @@ import Loading from "@/app/dashboard/loading";
 import { useEffect, useState } from "react";
 import { DefaultFormSelect, DefaultFormTextField } from "@/components/ui/default-form-field";
 import { useUser } from "@/contexts/user-context";
-import { editUser, getBranches, getRoles, getUserById } from "@/lib/actions/settings";
-import { Role } from "@/lib/repositories/accessRepository";
+import { editUser, getBranches, getRoles, getUserById } from "@/lib/actions/sys/settings";
+import { Role } from "@/lib/repositories/sys/accessRepository";
 import { Branch } from "../../branch-management/blocks/AddBranch";
 import { MultiSelect } from "@/components/multi-select";
 import { Card, CardContent, CardDescription, CardTitle, CardHeader } from "@/components/ui/card";
@@ -53,8 +53,8 @@ export default function EditUser({
       try {
         const userData = await getUserById(currentId);
         if (!userData.success) {
-          setError(userData.error)
-          throw(userData.error);
+          setError(userData.message)
+          throw(userData.message);
         }
 
         const rolesData = await getRoles();
@@ -116,7 +116,7 @@ export default function EditUser({
       } else {
         toast({
           title: "Error",
-          description: result.error,
+          description: result.message,
           variant: "destructive",
         });
       }

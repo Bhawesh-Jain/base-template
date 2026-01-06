@@ -1,6 +1,6 @@
-import { QueryBuilder, executeQuery } from "../helpers/db-helper";
-import { RepositoryBase } from "../helpers/repository-base";
-import { buildTree, PermissionItem } from "../helpers/permission-helper";
+import { QueryBuilder, executeQuery } from "../../helpers/db-helper";
+import { RepositoryBase } from "../../helpers/repository-base";
+import { buildTree, PermissionItem } from "../../helpers/permission-helper";
 import { UserRepository } from "./userRepository";
 
 export class SidebarRepository extends RepositoryBase {
@@ -21,7 +21,7 @@ export class SidebarRepository extends RepositoryBase {
       const user = await userRepo.getUserById(this.userId)
 
       if (!user.success) {
-        return this.failure(user.error)
+        return this.failure(user.message)
       }
 
       const permissions = await executeQuery<PermissionItem[]>(`

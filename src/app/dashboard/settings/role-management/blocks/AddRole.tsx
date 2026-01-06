@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { createRole } from "@/lib/actions/settings";
+import { createRole } from "@/lib/actions/sys/settings";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -52,7 +52,7 @@ export default function AddRole({
     } else {
       toast({
         title: "Error",
-        description: result.error,
+        description: result.message,
         variant: "destructive"
       })
     }

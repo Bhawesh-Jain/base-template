@@ -3,7 +3,7 @@ import { DatabaseError } from "./db-helper";
 
 export type RepositoryResponse<T> = {
   success: boolean;
-  error: string;
+  message: string;
   result: T;
 }
 
@@ -22,7 +22,7 @@ export class RepositoryBase {
 
     return {
       success: false,
-      error: 'Internal Server Error!',
+      message: 'Internal Server Error!',
       result: {},
     }
   }
@@ -30,15 +30,15 @@ export class RepositoryBase {
   failure(reason: string): RepositoryResponse<any> {
     return {
       success: false,
-      error: reason,
+      message: reason,
       result: {},
     }
   }
 
-  success(data: any): RepositoryResponse<any> {
+  success(data?: any, message: string = 'Request Successful!'): RepositoryResponse<any> {
     return {
       success: true,
-      error: '',
+      message: message,
       result: data,
     }
   }

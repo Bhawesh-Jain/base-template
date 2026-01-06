@@ -1,5 +1,5 @@
-import { QueryBuilder, executeQuery } from "../helpers/db-helper";
-import { RepositoryBase } from "../helpers/repository-base";
+import { QueryBuilder, executeQuery } from "../../helpers/db-helper";
+import { RepositoryBase } from "../../helpers/repository-base";
 import bcrypt from 'bcryptjs';
 
 export interface User {
@@ -181,7 +181,7 @@ export class UserRepository extends RepositoryBase {
     try {
       const existing = await this.checkExisting(data.email || '', data.phone || '');
       if (existing.success) {
-        return this.failure(existing.error);
+        return this.failure(existing.message);
       }
 
       // var branches = data.branch.split(',')

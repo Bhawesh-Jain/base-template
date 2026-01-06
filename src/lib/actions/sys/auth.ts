@@ -1,8 +1,8 @@
 "use server"
-import { getSession } from "../session";
-import { UserAuthRepository } from "../repositories/userAuthRepository";
+import { getSession } from "../../session";
+import { UserAuthRepository } from "../../repositories/sys/userAuthRepository";
 import { cookies } from "next/headers";
-import { customLog } from "../utils";
+import { customLog } from "../../utils";
 
 export type UserData = {
   user_id: string;

@@ -6,7 +6,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { UserProvider } from "@/contexts/user-context"
-import { UserData } from "@/lib/actions/auth"
+import { UserData } from "@/lib/actions/sys/auth"
 import { validateSession } from "@/lib/session"
 import { redirect } from "next/navigation"
 import TopBar from "@/components/nav/top-bar"

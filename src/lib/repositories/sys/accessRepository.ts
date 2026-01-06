@@ -1,6 +1,6 @@
-import { QueryBuilder } from "../helpers/db-helper";
-import { buildTree, PermissionItem } from "../helpers/permission-helper";
-import { RepositoryBase } from "../helpers/repository-base"
+import { QueryBuilder } from "../../helpers/db-helper";
+import { buildTree, PermissionItem } from "../../helpers/permission-helper";
+import { RepositoryBase } from "../../helpers/repository-base"
 
 export interface Role {
   id: string;

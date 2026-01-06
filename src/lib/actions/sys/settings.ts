@@ -1,10 +1,10 @@
 'use server'
 
 import { UserFormValues } from "@/app/dashboard/settings/user-management/blocks/AddUser";
-import { AccessRepository } from "../repositories/accessRepository";
-import { getSession } from "../session";
-import { UserRepository } from "../repositories/userRepository";
-import { BranchRepository } from "../repositories/branchRepository";
+import { AccessRepository } from "../../repositories/sys/accessRepository";
+import { getSession } from "../../session";
+import { UserRepository } from "../../repositories/sys/userRepository";
+import { BranchRepository } from "../../repositories/sys/branchRepository";
 
 export async function getRoles() {
   const session = await getSession();
