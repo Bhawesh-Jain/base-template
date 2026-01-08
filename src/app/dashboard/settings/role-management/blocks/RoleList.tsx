@@ -45,8 +45,8 @@ export default function RoleList({
             onClick={() => handleClickRole(role)}
             key={role.id}
             className={cn(
-              "flex justify-between items-center gap-5 py-2 p-3 shadow-sm cursor-pointer hover:shadow-md hover:bg-gray-50",
-              selectedRole?.id === role.id && "bg-gray-100",
+              "flex justify-between items-center gap-5 py-2 p-3 shadow-sm cursor-pointer hover:shadow-md hover:bg-muted",
+              selectedRole?.id === role.id && "bg-muted",
               index > 0 && 'border-t'
             )}
           >
