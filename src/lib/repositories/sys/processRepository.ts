@@ -1,7 +1,6 @@
 import { QueryBuilder, executeQuery, withTransaction } from "../../helpers/db-helper";
 import { RepositoryBase } from "../../helpers/repository-base";
 import mysql from "mysql2/promise";
-import { getSession } from "../../session";
 
 export class ProcessRepository extends RepositoryBase {
   constructor() {
@@ -23,13 +22,13 @@ export class ProcessRepository extends RepositoryBase {
   private async updateProcessWithTransaction({
     processName,
     processValue,
-    orderId,
+    associatedId,
     userId,
     transactionConnection,
   }: {
     processName: string;
     processValue: number;
-    orderId: string;
+    associatedId: string;
     userId: string;
     transactionConnection: mysql.Connection;
   }) {
@@ -42,7 +41,7 @@ export class ProcessRepository extends RepositoryBase {
 
       // Use helper function to add conditions.
       const queryBuilders = [queryStatus, queryLog, queryWorker];
-      this.addIdentifierCondition(queryBuilders, updateContent, "order_id", orderId);
+      this.addIdentifierCondition(queryBuilders, updateContent, "associated_id", associatedId);
 
       const statusUpdate = await queryStatus.update({
         [processName]: processValue,
@@ -88,22 +87,22 @@ export class ProcessRepository extends RepositoryBase {
       await new QueryBuilder("process_status")
         .setConnection(transactionConnection)
         .insert({
-          order_id: orderId,
-          details_process: 1,
+          associated_id: orderId,
+          process_name: 1,
         });
 
       await new QueryBuilder("process_log")
         .setConnection(transactionConnection)
         .insert({
-          order_id: orderId,
-          details_process: new Date(),
+          associated_id: orderId,
+          process_name: new Date(),
         });
 
       await new QueryBuilder("process_worker")
         .setConnection(transactionConnection)
         .insert({
-          order_id: orderId,
-          details_process: userId,
+          associated_id: orderId,
+          process_name: userId,
         });
 
       return this.success("Process Initialized!");
@@ -152,7 +151,7 @@ export class ProcessRepository extends RepositoryBase {
         return this.updateProcessWithTransaction({
           processName,
           processValue,
-          orderId,
+          associatedId: orderId,
           userId,
           transactionConnection,
         });
@@ -161,7 +160,7 @@ export class ProcessRepository extends RepositoryBase {
           return this.updateProcessWithTransaction({
             processName,
             processValue,
-            orderId,
+            associatedId: orderId,
             userId,
             transactionConnection: connection,
           });
@@ -176,9 +175,9 @@ export class ProcessRepository extends RepositoryBase {
     try {
       // Get columns for all three tables
       const [statusColumns, logColumns, workerColumns] = await Promise.all([
-        this.getTableColumns('process_status', ['order_id', 'order_type', 'id']),
-        this.getTableColumns('process_log', ['order_id', 'order_type', 'id']),
-        this.getTableColumns('process_worker', ['order_id', 'order_type', 'id'])
+        this.getTableColumns('process_status', ['associated_id', 'id']),
+        this.getTableColumns('process_log', ['associated_id', 'id']),
+        this.getTableColumns('process_worker', ['associated_id', 'id'])
       ]);
 
       // Build dynamic select clauses
@@ -247,10 +246,10 @@ export class ProcessRepository extends RepositoryBase {
         ${workerNames ? workerSelect + userSelects : workerSelect}
       FROM process_status s
       LEFT JOIN process_log l 
-        ON s.order_id = l.order_id 
+        ON s.associated_id = l.associated_id 
       LEFT JOIN process_worker w 
-        ON s.order_id = w.order_id${workerNames ? userJoins : ''}
-      WHERE s.order_id = ?
+        ON s.associated_id = w.associated_id${workerNames ? userJoins : ''}
+      WHERE s.associated_id = ?
       LIMIT 1
     `;
 
@@ -288,16 +287,16 @@ export class ProcessRepository extends RepositoryBase {
       var sql = `
           SELECT
           s.id AS status_id,
-          s.order_id,
+          s.associated_id,
 
           ${all}
 
           FROM process_status s
             LEFT JOIN process_log l 
-              ON s.order_id = l.order_id 
+              ON s.associated_id = l.associated_id 
             LEFT JOIN process_worker w 
-              ON s.order_id = w.order_id 
-          WHERE s.order_id = ?
+              ON s.associated_id = w.associated_id 
+          WHERE s.associated_id = ?
       `;
       const result = await executeQuery<any[]>(sql, [orderId])
 
