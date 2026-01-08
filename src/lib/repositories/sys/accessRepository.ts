@@ -11,14 +11,10 @@ export interface Role {
 }
 
 export class AccessRepository extends RepositoryBase {
-  private roleBuilder: QueryBuilder;
-  private moduleBuilder: QueryBuilder;
   private companyId: string;
 
   constructor(companyId: string) {
     super()
-    this.roleBuilder = new QueryBuilder('roles');
-    this.moduleBuilder = new QueryBuilder('modules');
     this.companyId = companyId;
   }
 
@@ -27,8 +23,10 @@ export class AccessRepository extends RepositoryBase {
     role: string
   ) {
     try {
-      const query = this.roleBuilder
-        .where('? in (company_id)', this.companyId)
+      const query = new QueryBuilder('roles')
+        .orderBy('id', 'ASC')
+        .orWhere('company_id IS NULL')
+        .orWhere('? in (company_id)', this.companyId)
         .where('status = ?', 1);
 
       if (role != '1') {
@@ -46,8 +44,9 @@ export class AccessRepository extends RepositoryBase {
 
   async getAllPermissions() {
     try {
-      const result = await this.moduleBuilder
-        .where('? in (company_id)', this.companyId)
+      const result = await new QueryBuilder('modules')
+        .orWhere('company_id IS NULL')
+        .orWhere('? in (company_id)', this.companyId)
         .where('status = ?', 1)
         .select(['id', 'parent_id', 'url', 'title', 'menu_order'])
 
@@ -61,7 +60,9 @@ export class AccessRepository extends RepositoryBase {
 
   async updateRolePermissions(roleId: string, permissions: number[]) {
     try {
-      await this.roleBuilder.where('id = ?', roleId).update({ permissions: permissions.join(',') });
+      await new QueryBuilder('roles')
+        .where('id = ?', roleId)
+        .update({ permissions: permissions.join(',') });
       return this.success(true);
     } catch (error) {
       return this.handleError(error);
@@ -74,13 +75,14 @@ export class AccessRepository extends RepositoryBase {
     userId: string
   ) {
     try {
-      const insert = await this.roleBuilder.insert({
-        role_name: name,
-        company_id: this.companyId,
-        department: department,
-        status: 1,
-        created_by: userId
-      });
+      const insert = await new QueryBuilder('roles')
+        .insert({
+          role_name: name,
+          company_id: this.companyId,
+          department: department,
+          status: 1,
+          created_by: userId
+        });
 
       if (insert) {
         return this.success(insert);

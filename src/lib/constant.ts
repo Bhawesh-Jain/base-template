@@ -4,7 +4,7 @@ export class Constants {
   }
 
   static companyName = '';
-  static companyNameMono = '';
+  static companyNameMono = 'BASE';
   static companyNameSmall = '';
   static companyAbbr = '';
 
