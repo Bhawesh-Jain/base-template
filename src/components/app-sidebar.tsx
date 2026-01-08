@@ -39,7 +39,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <div className="flex items-center justify-between px-4 py-2">
             <Link href="#" className="flex items-center gap-2 font-medium">
               <Image src="/assets/logo.png" alt="Logo" width={16} height={16} className="rounded-md" />
-              {Constants.companyName}
+              {Constants.companyAbbr}
             </Link>
           </div>
         </SidebarMenu>

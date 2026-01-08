@@ -3,10 +3,10 @@ export class Constants {
     
   }
 
-  static companyName = '';
-  static companyNameMono = 'BASE';
-  static companyNameSmall = '';
-  static companyAbbr = '';
+  static companyName = 'Early Triumph Motorcycle Parts';
+  static companyNameMono = 'EarlyTriumphMotorcycleParts';
+  static companyNameSmall = 'early triumph motorcycle parts';
+  static companyAbbr = 'ETMP';
 
-  static companyDesc = '';
+  static companyDesc = `Admin Panel for ${this.companyName}`;
 }
