@@ -16,3 +16,10 @@ export async function updateCategoryStatus({ field, status, categoryId }: { fiel
   const repo = new CategoryRepository(session.company_id);
   return await repo.getCategoryList({});
 }
+
+export async function createCategory(data: any) {
+  const session = await getSession();
+
+  const repo = new CategoryRepository(session.company_id);
+  return await repo.getCategoryList({});
+}

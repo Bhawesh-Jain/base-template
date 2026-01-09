@@ -5,19 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";import { createFormSchema } from "@/lib/form-builder-utils";
 import { useFormBuilder } from "@/hooks/use-form-builder";
 import { FormBuilder } from "./form-builder";
+import { FormField } from "@/types/form-builder";
+import { Container } from "./ui/container";
 
 interface DynamicFormProps {
   title: string;
   description?: string;
-  fields: Array<{
-    name: string;
-    label: string;
-    type: 'text' | 'textarea' | 'select' | 'date' | 'time' | 'number' | 'email' | 'password';
-    required?: boolean;
-    placeholder?: string;
-    options?: Array<{ label: string; value: string }>;
-    colSpan?: 1 | 2 | 3 | 4 | 5 | 6 | 12;
-  }>;
+  fields: FormField[];
   onSubmit: (data: any) => Promise<void>;
   submitButtonText?: string;
   defaultValues?: Record<string, any>;
@@ -48,7 +42,7 @@ export function DynamicForm({
   };
 
   return (
-    <Card>
+    <Container>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         {description && (
@@ -66,6 +60,6 @@ export function DynamicForm({
           gridColumns={2}
         />
       </CardContent>
-    </Card>
+    </Container>
   );
 }
