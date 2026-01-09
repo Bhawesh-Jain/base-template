@@ -145,7 +145,7 @@ export default function AddCategory() {
                       setCategoryFile(null);
                     }
                   }}
-                  required={false} // Make image optional
+                  required={false}
                 />
                 <p className="text-sm text-muted-foreground mt-1">
                   Upload an image for the category (optional)
@@ -189,7 +189,7 @@ export default function AddCategory() {
                     <span className="mr-2">Creating...</span>
                   </>
                 ) : (
-                  "Add Category" // Fixed button text
+                  "Add Category"
                 )}
               </Button>
             </div>

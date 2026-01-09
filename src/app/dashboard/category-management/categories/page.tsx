@@ -14,6 +14,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Edit2 } from "lucide-react";
 import { encryptIdForUrl } from "@/lib/utils/crypto";
+import ZoomableImage from "@/components/ZoomableImage";
 
 
 export default function CategoryListPage() {
@@ -89,6 +90,18 @@ export default function CategoryListPage() {
   );
 
   const columns: Column<Category>[] = [
+    {
+      id: "category_image",
+      header: "Category Image",
+      accessorKey: "category_image",
+      sortable: true,
+      visible: true,
+      cell: (row) => {
+        return (
+          <ZoomableImage src={row.category_image} alt={row.category_name} key={row.category_id} />
+        )
+      },
+    },
     {
       id: "category_name",
       header: "Category Name",
