@@ -1,5 +1,6 @@
 'use server'
 
+import { CategoryFormValues } from "@/app/dashboard/category-management/categories/add/page";
 import { CategoryRepository } from "../repositories/categoryRepository";
 import { getSession } from "../session";
 
@@ -17,9 +18,9 @@ export async function updateCategoryStatus({ field, status, categoryId }: { fiel
   return await repo.getCategoryList({});
 }
 
-export async function createCategory(data: any) {
+export async function createCategory(data: CategoryFormValues) {
   const session = await getSession();
 
   const repo = new CategoryRepository(session.company_id);
-  return await repo.getCategoryList({});
+  return await repo.createCategory(session.user_id, data);
 }

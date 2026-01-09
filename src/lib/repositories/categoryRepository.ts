@@ -1,3 +1,4 @@
+import { CategoryFormValues } from "@/app/dashboard/category-management/categories/add/page";
 import { QueryBuilder } from "../helpers/db-helper";
 import { RepositoryBase } from "../helpers/repository-base";
 
@@ -61,6 +62,25 @@ export class CategoryRepository extends RepositoryBase {
       }
 
       return this.success(res);
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async createCategory(
+    userId: string,
+    data: CategoryFormValues,
+  ) {
+    try{
+      const res = await new QueryBuilder('categories')
+        .insert({
+          ...data,
+          updated_by: userId,
+          company_id: this.companyId,
+          status: 1
+        })
+
+        return this.success('Category Added!');
     } catch (error) {
       return this.handleError(error);
     }
