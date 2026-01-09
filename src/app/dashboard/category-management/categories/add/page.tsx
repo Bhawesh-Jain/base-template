@@ -14,13 +14,18 @@ import { createCategory } from "@/lib/actions/category";
 import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui/container";
 
-
-const formScheme = z.object({
-  category_name: z.string().min(2, "Add a name").max(255, "Name must be less than 255 characters"),
-  category_description: z.string().min(2, "Add a name").max(255, "Name must be less than 255 characters"),
+export const CategoryFormSchema = z.object({
+  category_name: z.string()
+    .min(2, "Category name must be at least 2 characters")
+    .max(150, "Category name must be less than 150 characters"),
+  category_description: z.string()
+    .min(2, "Description must be at least 2 characters")
+    .max(255, "Description must be less than 255 characters")
+    .optional()
+    .or(z.literal('')),
 });
 
-export type CategoryFormValues = z.infer<typeof formScheme>;
+export type CategoryFormValues = z.infer<typeof CategoryFormSchema>;
 
 export default function AddCategory() {
   const [loading, setLoading] = useState(false);
@@ -30,7 +35,7 @@ export default function AddCategory() {
   const defaultValues: Partial<CategoryFormValues> = {};
 
   const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(formScheme),
+    resolver: zodResolver(CategoryFormSchema),
     defaultValues,
   });
 

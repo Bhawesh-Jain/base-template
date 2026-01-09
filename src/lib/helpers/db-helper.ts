@@ -112,6 +112,33 @@ export class QueryBuilder {
     return { clause, parameters: params };
   }
   
+  async selectOne<T>(fields: string[] = ['*']): Promise<T | null> {
+    let query = `SELECT ${fields.join(', ')} FROM ${this.table}`;
+
+    const { clause, parameters } = this.buildWhereClause();
+    query += clause;
+
+    if (this.orderByFields.length) {
+      query += ` ORDER BY ${this.orderByFields.join(', ')}`;
+    }
+
+    if (this.limitValue !== undefined) {
+      query += ` LIMIT ${this.limitValue}`;
+    }
+
+    if (this.offsetValue !== undefined) {
+      query += ` OFFSET ${this.offsetValue}`;
+    }
+
+    const result = await executeQuery<T[]>(query, parameters, this.connection);
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    return result[0];
+  }
+  
   async select<T>(fields: string[] = ['*']): Promise<T[]> {
     let query = `SELECT ${fields.join(', ')} FROM ${this.table}`;
     

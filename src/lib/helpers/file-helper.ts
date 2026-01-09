@@ -50,6 +50,7 @@ export async function saveFile(
     dirPath = '',
     addedFrom = 'Frontend',
     isProtected = 0,
+    updatedBy: string,
     transaction: any = null
 ): Promise<FileResult> {
     const uploadDir = dirPath || DEFAULT_UPLOAD_DIR;
@@ -86,6 +87,7 @@ export async function saveFile(
             fileSize: file.size,
             fileMime: file.type,
             addedFrom,
+            updatedBy,
             is_protected: isProtected,
             transactionConnection: transaction
         });
@@ -98,7 +100,7 @@ export async function saveFile(
         }
 
         const fileId = logResult.result;
-        
+
 
 
         return { image: finalFileName, fileId, success: true };
@@ -136,6 +138,7 @@ export async function deleteFile(
     fileName: string,
     dirPath = '',
     identifier: string,
+    userId: string,
     hardDelete: boolean = DEFAULT_HARD_DELETE
 ): Promise<{ message: string; success: true } | ErrorResult> {
     const uploadDir = dirPath || DEFAULT_UPLOAD_DIR;
@@ -146,7 +149,7 @@ export async function deleteFile(
     }
 
     try {
-        var logResult = await new FileRepository(DEFAULT_COMPANY_ID).markFileInactive(identifier);
+        var logResult = await new FileRepository(DEFAULT_COMPANY_ID).markFileInactive(identifier, userId);
 
         if (!logResult.success) {
             return { error: logResult.message, success: false };
@@ -166,12 +169,22 @@ export async function deleteFile(
 /**
  * Deletes a file from disk and marks its database record inactive
  */
-export async function deleteFileFromIdentifier(
+export async function deleteFileFromIdentifier({
+    identifier,
+    associatedType = '',
+    userId = '',
+    transaction = null,
+    hardDelete = DEFAULT_HARD_DELETE
+}: {
     identifier: string,
-    transaction: any = null,
-    hardDelete: boolean = DEFAULT_HARD_DELETE,
-): Promise<{ message: string; success: true } | ErrorResult> {
-    const fileRecord = await new FileRepository(DEFAULT_COMPANY_ID).getFileRecord(identifier, transaction);
+    associatedType?: string,
+    userId?: string,
+    transaction?: any,
+    hardDelete?: boolean,
+}): Promise<{ message: string; success: true } | ErrorResult> {
+    const fileRecord = associatedType.length > 0
+        ? await new FileRepository(DEFAULT_COMPANY_ID).getFileFromType(identifier, associatedType, transaction)
+        : await new FileRepository(DEFAULT_COMPANY_ID).getFileRecord(identifier, transaction);
 
     if (!fileRecord.success) {
         return { error: fileRecord.message, success: false };
@@ -184,7 +197,7 @@ export async function deleteFileFromIdentifier(
     const filePath = path.join(uploadDir, fileName);
     try {
 
-        var logResult = await new FileRepository(DEFAULT_COMPANY_ID).markFileInactive(identifier, transaction);
+        var logResult = await new FileRepository(DEFAULT_COMPANY_ID).markFileInactive(fileRecord.result.identifier, userId, transaction);
 
         if (!fs.existsSync(filePath)) {
             return { error: 'File not found', success: false };

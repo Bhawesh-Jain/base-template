@@ -89,14 +89,18 @@ export function DefaultFormTextArea({
   label,
   name,
   placeholder,
+  disabled = false,
   form,
+  className,
   rows = 3
 }: {
   label: string,
   name: string,
   placeholder: string,
   rows?: number,
-  form: any
+  className?: string,
+  form: any,
+  disabled?: boolean
 }) {
   return (
     <FormField
@@ -106,7 +110,7 @@ export function DefaultFormTextArea({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Textarea placeholder={placeholder} {...field} rows={rows} />
+            <Textarea placeholder={placeholder} disabled={disabled} className={className} {...field} rows={rows} />
           </FormControl>
           <FormMessage />
         </FormItem>

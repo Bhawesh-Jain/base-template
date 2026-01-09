@@ -31,6 +31,7 @@ export class FileRepository extends RepositoryBase {
         fileMime,
         fileType = 'image',
         addedFrom = 'default',
+        updatedBy,
         is_protected = 0,
         transactionConnection
     }: {
@@ -41,6 +42,7 @@ export class FileRepository extends RepositoryBase {
         fileName: string,
         fileSize: number,
         fileMime: string,
+        updatedBy: string,
         fileType?: string,
         addedFrom?: string,
         is_protected?: number,
@@ -61,6 +63,7 @@ export class FileRepository extends RepositoryBase {
                     file_mime: fileMime,
                     file_type: fileType,
                     identifier: identifier,
+                    updated_by: updatedBy,
                     is_protected: is_protected,
                     company_id: this.companyId,
                     status: 1,
@@ -85,7 +88,30 @@ export class FileRepository extends RepositoryBase {
                 .orWhere('identifier = ?', identifier)
                 .orWhere('id = ?', identifier)
                 .where('status > 0')
-                .select(['path', 'file_mime', 'file_name', 'dir']) as any[]
+                .select(['path', 'file_mime', 'file_name', 'dir', 'identifier']) as any[]
+
+            if (result.length == 0) {
+                return this.failure('File Not Found!')                
+            }
+
+            return this.success(result[0])
+        } catch (error) {
+            return this.handleError(error);
+        }
+    }
+
+    async getFileFromType(
+        associatedId: string,
+        associatedType: string,
+        transactionConnection?: mysql.Connection
+    ) {
+        try {
+            const result = await new QueryBuilder('file_log')
+                .setConnection(transactionConnection)
+                .where('associated_id = ?', associatedId)
+                .where('associated_type = ?', associatedType)
+                .where('status > 0')
+                .select(['path', 'file_mime', 'file_name', 'dir', 'identifier']) as any[]
 
             if (result.length == 0) {
                 return this.failure('File Not Found!')                
@@ -99,6 +125,7 @@ export class FileRepository extends RepositoryBase {
 
     async markFileInactive(
         identifier: string,
+        userId: string,
         transactionConnection?: mysql.Connection
     ) {
         try {
@@ -108,7 +135,8 @@ export class FileRepository extends RepositoryBase {
                 .orWhere('id = ?', identifier)
                 .where('status > 0')
                 .update({
-                    status: 0
+                    status: 0,
+                    updated_by: userId
                 })
 
             if (result == 0) {

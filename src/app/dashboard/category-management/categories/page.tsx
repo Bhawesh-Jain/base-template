@@ -7,11 +7,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useGlobalDialog } from "@/providers/DialogProvider";
 import { getCategoryList, updateCategoryStatus } from "@/lib/actions/category";
 import formatDate from "@/lib/utils/date";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonTooltip } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Category } from "@/lib/repositories/categoryRepository";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Edit2 } from "lucide-react";
+import { encryptIdForUrl } from "@/lib/utils/crypto";
 
 
 export default function CategoryListPage() {
@@ -144,11 +146,11 @@ export default function CategoryListPage() {
       align: 'right',
       cell: (row) => {
         return (
-          <div>
-            <Button variant={'outline'} onClick={() => setSelected(row)}>
-              Manage Category
-            </Button>
-          </div>
+          <Link href={`${pathname}/edit/${encryptIdForUrl(String(row.category_id))}?h=Edit Category`}>
+            <ButtonTooltip title="Edit Category" variant={'ghost'} size={'icon'}>
+              <Edit2 />
+            </ButtonTooltip>
+          </Link>
         );
       },
     },
