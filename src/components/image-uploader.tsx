@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Upload, X, ImageIcon, AlertCircle, Loader2 } from "lucide-react";
+import { X, ImageIcon, AlertCircle, Loader2 } from "lucide-react";
 
 export type UploaderFile = { file: File, previewUrl: string, id?: string };
 
