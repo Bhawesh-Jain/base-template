@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Upload, X, ImageIcon, AlertCircle, Loader2 } from "lucide-react";
 
-export type UploaderFile = { file: File, previewUrl: string };
+export type UploaderFile = { file: File, previewUrl: string, id?: string };
 
 interface ImageUploaderProps {
   label?: string;

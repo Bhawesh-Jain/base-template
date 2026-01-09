@@ -1,14 +1,135 @@
 import DatePicker from "../date-picker";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./form";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "./form";
 import { Input } from "./input";
 import { Select, SelectValue, SelectTrigger, SelectContent, SelectItem } from "./select";
 import { Textarea } from "./textarea";
+import { Checkbox } from "./checkbox";
 
+export function DefaultFormCheckbox({
+  label,
+  name,
+  description = "",
+  disabled = false,
+  form,
+  className,
+}: {
+  label: string;
+  name: string;
+  description?: string;
+  disabled?: boolean;
+  form: any;
+  className?: string;
+}) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={`flex flex-row items-start space-x-3 space-y-0 ${className}`}>
+          <FormControl>
+            <Checkbox
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              disabled={disabled}
+            />
+          </FormControl>
+          <div className="space-y-1 leading-none">
+            <FormLabel className="cursor-pointer">
+              {label}
+            </FormLabel>
+            {description && (
+              <FormDescription>
+                {description}
+              </FormDescription>
+            )}
+          </div>
+        </FormItem>
+      )}
+    />
+  );
+}
+
+export function DefaultFormCheckboxGroup({
+  label,
+  name,
+  options,
+  description = "",
+  disabled = false,
+  form,
+  className,
+  orientation = "vertical" as "vertical" | "horizontal",
+}: {
+  label: string;
+  name: string;
+  options: { value: string; label: string }[];
+  description?: string;
+  disabled?: boolean;
+  form: any;
+  className?: string;
+  orientation?: "vertical" | "horizontal";
+}) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={() => (
+        <FormItem className={className}>
+          <div>
+            <FormLabel>{label}</FormLabel>
+            {description && (
+              <FormDescription>
+                {description}
+              </FormDescription>
+            )}
+          </div>
+          <div className={`flex ${orientation === "horizontal" ? "flex-row gap-4 flex-wrap" : "flex-col gap-2"} mt-2`}>
+            {options.map((option) => (
+              <FormField
+                key={option.value}
+                control={form.control}
+                name={name}
+                render={({ field }) => {
+                  return (
+                    <FormItem
+                      key={option.value}
+                      className="flex flex-row items-start space-x-2 space-y-0"
+                    >
+                      <FormControl>
+                        <Checkbox
+                          checked={Array.isArray(field.value) ? field.value.includes(option.value) : field.value === option.value}
+                          onCheckedChange={(checked) => {
+                            if (Array.isArray(field.value)) {
+                              const updatedValue = checked
+                                ? [...field.value, option.value]
+                                : field.value.filter((value: string) => value !== option.value);
+                              field.onChange(updatedValue);
+                            } else {
+                              field.onChange(checked ? option.value : undefined);
+                            }
+                          }}
+                          disabled={disabled}
+                        />
+                      </FormControl>
+                      <FormLabel className="font-normal cursor-pointer">
+                        {option.label}
+                      </FormLabel>
+                    </FormItem>
+                  );
+                }}
+              />
+            ))}
+          </div>
+        </FormItem>
+      )}
+    />
+  );
+}
 export function DefaultFormTextField({
   label,
   name,
   placeholder = '',
   step = '',
+  type,
   uppercase = false,
   disabled = false,
   capitalize = true,
@@ -17,6 +138,7 @@ export function DefaultFormTextField({
   label: string,
   name: string,
   step?: string,
+  type?: string,
   placeholder?: string,
   uppercase?: boolean,
   disabled?: boolean,
@@ -36,6 +158,7 @@ export function DefaultFormTextField({
               placeholder={placeholder} 
               step={step}
               {...field}
+              type={type}
               value={field.value || ''}
               onChange={(e) => {
                 const value = uppercase
@@ -125,12 +248,14 @@ export function DefaultFormSelect({
   name,
   placeholder = '',
   options,
+  disabled,
   form,
 }: {
   label: string,
   name: string,
   options: any[],
   placeholder?: string,
+  disabled?: boolean,
   form: any,
 }) {
   return (
@@ -146,6 +271,7 @@ export function DefaultFormSelect({
               value={String(field.value)}
               defaultValue={String(field.value)}
               form={form}
+              disabled={disabled}
             >
               <SelectTrigger>
                 <SelectValue placeholder={placeholder} />
