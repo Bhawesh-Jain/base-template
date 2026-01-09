@@ -39,7 +39,7 @@ interface DialogContextType {
     cancelText?: string
   ) => void
   closeDialog: () => void
-  setLoading: (loading: boolean) => void
+  setDialogLoading: (loading: boolean) => void
 }
 
 const DialogContext = createContext<DialogContextType | undefined>(undefined)
@@ -68,7 +68,7 @@ export function DialogProvider({ children }: { children: ReactNode }) {
         showDeleteConfirmation,
         showConfirmation,
         closeDialog,
-        setLoading,
+        setDialogLoading: setLoading,
       }}
     >
       {children}

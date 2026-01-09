@@ -4,11 +4,11 @@ import { CategoryFormValues } from "@/app/dashboard/category-management/categori
 import { CategoryRepository } from "../repositories/categoryRepository";
 import { getSession } from "../session";
 
-export async function getCategoryList({ }) {
+export async function getCategoryList({}) {
   const session = await getSession();
 
   const repo = new CategoryRepository(session.company_id);
-  return await repo.getCategoryList({});
+  return await repo.getCategoryList({status: 0, modifier: '>'});
 }
 
 export async function getCategoryById(categoryId: string) {
@@ -37,4 +37,11 @@ export async function updateCategory(categoryId: string, data: CategoryFormValue
 
   const repo = new CategoryRepository(session.company_id);
   return await repo.updateCategory(categoryId, session.user_id, data);
+}
+
+export async function deleteCategory(categoryId: string) {
+  const session = await getSession();
+
+  const repo = new CategoryRepository(session.company_id);
+  return await repo.deleteCategory(categoryId);
 }

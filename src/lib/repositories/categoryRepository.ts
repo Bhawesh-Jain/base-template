@@ -43,9 +43,7 @@ export class CategoryRepository extends RepositoryBase {
     try {
       const builder = new QueryBuilder('categories');
 
-      if (status) {
-        builder.where(`status ${modifier} ?`, status);
-      }
+      builder.where(`status ${modifier} ?`, status);
 
       if (this.companyId) {
         builder.where(`company_id = ?`, this.companyId);
@@ -171,6 +169,26 @@ export class CategoryRepository extends RepositoryBase {
         .update({
           ...data,
           updated_by: userId,
+        })
+
+      if (res <= 0) {
+        return this.failure('Update Failed!')
+      }
+
+      return this.success('Category Updated!');
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
+
+  async deleteCategory(
+    categoryId: string,
+  ) {
+    try {
+      const res = await new QueryBuilder('categories')
+        .where('category_id = ?', categoryId)
+        .update({
+          status: -1
         })
 
       if (res <= 0) {

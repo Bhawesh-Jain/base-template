@@ -15,6 +15,7 @@ export async function executeQuery<T>(
   transaction?: mysql.Connection
 ): Promise<T> {
   const connection = transaction || db;
+  console.log(query, params);
   
   try {
     const [rows] = await connection.execute(query, params);

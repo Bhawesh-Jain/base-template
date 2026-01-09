@@ -5,14 +5,14 @@ import { CardHeader, CardTitle, CardDescription, CardContent } from "@/component
 import { Container } from "@/components/ui/container";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useGlobalDialog } from "@/providers/DialogProvider";
-import { getCategoryList, updateCategoryStatus } from "@/lib/actions/category";
+import { deleteCategory, getCategoryList, updateCategoryStatus } from "@/lib/actions/category";
 import formatDate from "@/lib/utils/date";
 import { Button, ButtonTooltip } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Category } from "@/lib/repositories/categoryRepository";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Edit2 } from "lucide-react";
+import { Edit2, Trash2 } from "lucide-react";
 import { encryptIdForUrl } from "@/lib/utils/crypto";
 import ZoomableImage from "@/components/ZoomableImage";
 
@@ -20,22 +20,22 @@ import ZoomableImage from "@/components/ZoomableImage";
 export default function CategoryListPage() {
   const [items, setItems] = useState<any[]>([]);
   const [reload, setReload] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState<any>(null);
-  const { showError } = useGlobalDialog();
+  const [isLoading, setIsLoading] = useState(true);
+  const { showError, showDeleteConfirmation, setDialogLoading, showSuccess } = useGlobalDialog();
   const pathname = usePathname();
 
   useEffect(() => {
     if (!reload) return;
     (async () => {
-      setLoading(true);
+      setIsLoading(true);
+      setItems([]);
       try {
         const result = await getCategoryList({});
         setItems(result.result || []);
       } catch (error: any) {
         showError("Request Failed!", error?.message || error.toString());
       } finally {
-        setLoading(false);
+        setIsLoading(false);
         setReload(false);
       }
     })();
@@ -89,6 +89,30 @@ export default function CategoryListPage() {
     [showError]
   );
 
+  const deleteCategoryFunc = async (category: Category) => {
+    showDeleteConfirmation(
+      `Delete ${category.category_name}?`,
+      'Are you sure you want to delete this category? This action is irreversible and will destroy all the products in this category!',
+      async () => {
+        try {
+          setDialogLoading(true);
+
+          const result = await deleteCategory(String(category.category_id));
+
+          if (result.success) {
+            showSuccess('Request Successful', result.result);
+            setReload(true);
+          } else {
+            showError('Error', result.message);
+          }
+        } catch (error: any) {
+          showError('Error', 'Something went wrong!');
+        } finally {
+          setDialogLoading(false);
+        }
+      }
+    );
+  }
   const columns: Column<Category>[] = [
     {
       id: "category_image",
@@ -159,11 +183,16 @@ export default function CategoryListPage() {
       align: 'right',
       cell: (row) => {
         return (
-          <Link href={`${pathname}/edit/${encryptIdForUrl(String(row.category_id))}?h=Edit Category`}>
-            <ButtonTooltip title="Edit Category" variant={'ghost'} size={'icon'}>
-              <Edit2 />
+          <div>
+            <Link href={`${pathname}/edit/${encryptIdForUrl(String(row.category_id))}?h=Edit Category`}>
+              <ButtonTooltip title="Edit Category" variant={'ghost'} size={'icon'}>
+                <Edit2 />
+              </ButtonTooltip>
+            </Link>
+            <ButtonTooltip title="Delete Category" variant={'ghost'} className="text-destructive" size={'icon'} onClick={() => deleteCategoryFunc(row)}>
+              <Trash2 />
             </ButtonTooltip>
-          </Link>
+          </div>
         );
       },
     },
@@ -181,7 +210,7 @@ export default function CategoryListPage() {
               </div>
 
               <Link href={`${pathname}/add?h=Add Category`}>
-                <Button onClick={() => setSelected(null)}>
+                <Button>
                   Add New
                 </Button>
               </Link>
@@ -192,7 +221,7 @@ export default function CategoryListPage() {
               data={items}
               columns={columns}
               fillEmpty={true}
-              loading={loading}
+              loading={isLoading}
               setReload={setReload}
             />
           </CardContent>
