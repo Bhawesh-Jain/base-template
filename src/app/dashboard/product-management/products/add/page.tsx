@@ -82,10 +82,6 @@ export const ProductFormSchema = z.object({
     .min(1, "SKU is required")
     .max(50, "SKU must be less than 50 characters"),
 
-  stock_quantity: z.string()
-    .regex(/^\d+$/, "Enter a valid quantity")
-    .transform(val => parseInt(val, 10)),
-
   weight: z.string()
     .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid weight")
     .optional()
@@ -118,7 +114,6 @@ const TAB_FIELDS: Record<string, string[]> = {
   pricing: [
     "base_price",
     "sale_price",
-    "stock_quantity",
     "sku",
     "weight",
     "is_active",
@@ -144,6 +139,7 @@ interface SizeOption {
   id: string
   name: string
   additional_price: number
+  stock: number
 }
 
 interface ProductImage {
@@ -163,9 +159,9 @@ export default function AddProduct() {
   const [productImages, setProductImages] = useState<ProductImage[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [sizeOptions, setSizeOptions] = useState<SizeOption[]>([
-    { id: "1", name: "Standard", additional_price: 0 }
+    { id: "1", name: "Standard", additional_price: 0, stock: 0 }
   ])
-  const [newSize, setNewSize] = useState({ name: "", additional_price: 0 })
+  const [newSize, setNewSize] = useState({ name: "", additional_price: 0, stock: 0 })
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(ProductFormSchema),
@@ -216,7 +212,7 @@ export default function AddProduct() {
   // Watch slug generation from product name
   const productName = form.watch("product_name")
   useEffect(() => {
-    if (productName && !form.getValues("product_slug")) {
+    if (productName) {
       const slug = productName
         .toLowerCase()
         .replace(/[^a-z0-9\s-]/g, '')
@@ -282,10 +278,11 @@ export default function AddProduct() {
       {
         id: Date.now().toString(),
         name: newSize.name,
-        additional_price: newSize.additional_price
+        additional_price: newSize.additional_price,
+        stock: newSize.stock
       }
     ])
-    setNewSize({ name: "", additional_price: 0 })
+    setNewSize({ name: "", additional_price: 0, stock: 0 })
 
     toast({
       title: "Size added",

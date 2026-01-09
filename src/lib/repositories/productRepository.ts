@@ -122,6 +122,8 @@ export class ProductRepository extends RepositoryBase {
     data: ProductFormValues,
   ) {
     try {
+      console.log(data);
+      
       const res = await new QueryBuilder('products')
         .insert({
           ...data,
