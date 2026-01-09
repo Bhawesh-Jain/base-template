@@ -36,6 +36,7 @@ export class RepositoryBase {
   }
 
   success(data?: any, message: string = 'Request Successful!'): RepositoryResponse<any> {
+    customLog(this.getClassName(), data, message);    
     return {
       success: true,
       message: message,

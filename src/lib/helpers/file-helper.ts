@@ -128,7 +128,7 @@ export function getMaxFileSize(readable = false): string | number {
  * Construct public URL for a stored file
  */
 export function getFileUrl(identifier: string): string {
-    return identifier ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/uploads/${identifier}` : '';
+    return identifier ? `${process.env.NEXT_PUBLIC_BASE_URL}/api/uploads/${identifier}` : '';
 }
 
 /**

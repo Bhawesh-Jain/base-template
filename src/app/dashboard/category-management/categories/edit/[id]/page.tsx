@@ -19,10 +19,10 @@ import ImageUploader, { UploaderFile } from "@/components/image-uploader";
 import { useUser } from "@/contexts/user-context";
 
 export default function EditCategory() {
-  const params = useParams();
   const { toast } = useToast();
   const { user } = useUser();
   const router = useRouter();
+  const params = useParams();
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,7 +122,7 @@ export default function EditCategory() {
         formData.append("category_id", String(categoryId));
         formData.append("user_id", String(user.user_id));
         formData.append("company_id", String(user.company_id));
-        formData.append("files", categoryFile.file);
+        formData.append("image", categoryFile.file);
 
         await fetch("/api/uploads/save-file/category", { method: "POST", body: formData });
       }
@@ -246,7 +246,6 @@ export default function EditCategory() {
                 {isSubmitting ? (
                   <>
                     <span className="mr-2">Updating...</span>
-                    <Loading />
                   </>
                 ) : (
                   "Update Category"

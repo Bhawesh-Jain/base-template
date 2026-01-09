@@ -2,7 +2,8 @@ import { CategoryFormValues } from "@/app/dashboard/category-management/categori
 import { QueryBuilder } from "../helpers/db-helper";
 import { RepositoryBase } from "../helpers/repository-base";
 import { File } from "fetch-blob/file.js";
-import { deleteFileFromIdentifier, saveFile } from "../helpers/file-helper";
+import { deleteFileFromIdentifier, getFileUrl, saveFile } from "../helpers/file-helper";
+import { FileRepository } from "./sys/fileRepository";
 
 export interface Category {
   category_id: number;
@@ -56,12 +57,18 @@ export class CategoryRepository extends RepositoryBase {
         return this.failure('No Categories Available!');
       }
 
-      if (count) {
-        // for (let i = 0; i < res.length; i++) {
-        //   const category = res[i];
 
-        //   const count = await new QueryBuilder('')
-        // }
+      const fileRepo = new FileRepository(this.companyId)
+      for (let i = 0; i < res.length; i++) {
+        const category = res[i] as Category;
+        if (count) {
+        }
+        const images = await fileRepo.getFileFromType(String(category.category_id), 'category_image');
+
+        if (images.success) {
+          const imageUrl = getFileUrl(images.result.identifier);
+          category.category_image = imageUrl;
+        }
       }
 
       return this.success(res);
@@ -85,7 +92,7 @@ export class CategoryRepository extends RepositoryBase {
         builder.where(`company_id = ?`, this.companyId);
       }
 
-      const res = await builder.selectOne();
+      const res = await builder.selectOne() as Category;
 
       if (!res) {
         return this.failure('Invalid Category!');
@@ -97,6 +104,13 @@ export class CategoryRepository extends RepositoryBase {
 
         //   const count = await new QueryBuilder('')
         // }
+      }
+
+      const images = await new FileRepository(this.companyId).getFileFromType(String(categoryId), 'category_image');
+
+      if (images.success) {
+        const imageUrl = getFileUrl(images.result.identifier);
+        res.category_image = imageUrl;
       }
 
       return this.success(res);
@@ -117,8 +131,8 @@ export class CategoryRepository extends RepositoryBase {
           company_id: this.companyId,
           status: 1
         })
-      
-        if (res <= 0) {
+
+      if (res <= 0) {
         return this.failure('Something went wrong!')
       }
 
@@ -136,7 +150,7 @@ export class CategoryRepository extends RepositoryBase {
     image: File,
   ) {
     try {
-      await deleteFileFromIdentifier({identifier: categoryId, associatedType: 'category_image', userId});
+      await deleteFileFromIdentifier({ identifier: categoryId, associatedType: 'category_image', userId });
 
       const res = await saveFile(image, 'category_image', categoryId, 'category_image', './uploads/category', 'updateCategoryImage', 0, userId)
 
