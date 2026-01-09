@@ -50,14 +50,14 @@ export default function CategoryListPage() {
   const onStatusChange = useCallback(
     async (field: string, id: number, checked: boolean) => {
       const currentItems = itemsRef.current;
-      const currentItem = currentItems.find(item => item.id === id);
+      const currentItem = currentItems.find(item => item.category_id === id);
 
       if (!currentItem) return;
       const previousValue = currentItem[field];
 
       setItems(prevItems => {
         return prevItems.map(item =>
-          item.id === id
+          item.category_id === id
             ? { ...item, [field]: checked ? 1 : 0 }
             : item
         );
@@ -68,7 +68,7 @@ export default function CategoryListPage() {
         if (!result.success) {
           setItems(prevItems => {
             return prevItems.map(item =>
-              item.id === id
+              item.category_id === id
                 ? { ...item, [field]: previousValue }
                 : item
             );
@@ -78,7 +78,7 @@ export default function CategoryListPage() {
       } catch (error: any) {
         setItems(prevItems => {
           return prevItems.map(item =>
-            item.id === id
+            item.category_id === id
               ? { ...item, [field]: previousValue }
               : item
           );

@@ -22,7 +22,7 @@ export async function updateCategoryStatus({ field, status, categoryId }: { fiel
   const session = await getSession();
 
   const repo = new CategoryRepository(session.company_id);
-  return await repo.getCategoryList({});
+  return await repo.updateCategoryStatus(field, status, categoryId);
 }
 
 export async function createCategory(data: CategoryFormValues) {

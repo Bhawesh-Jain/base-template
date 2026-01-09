@@ -200,4 +200,26 @@ export class CategoryRepository extends RepositoryBase {
       return this.handleError(error);
     }
   }
+  
+  async updateCategoryStatus(
+    field: string,
+    status: string,
+    categoryId: string,
+  ) {
+    try {
+      const res = await new QueryBuilder('categories')
+        .where('category_id = ?', categoryId)
+        .update({
+          [field]: status
+        })
+
+      if (res <= 0) {
+        return this.failure('Update Failed!')
+      }
+
+      return this.success('Category Updated!');
+    } catch (error) {
+      return this.handleError(error);
+    }
+  }
 }
