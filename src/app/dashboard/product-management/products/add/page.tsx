@@ -82,12 +82,6 @@ export const ProductFormSchema = z.object({
     .min(1, "SKU is required")
     .max(50, "SKU must be less than 50 characters"),
 
-  weight: z.string()
-    .regex(/^\d+(\.\d{1,2})?$/, "Enter a valid weight")
-    .optional()
-    .or(z.literal(''))
-    .transform(val => val ? parseFloat(val) : undefined),
-
   is_active: z.boolean().default(true),
   is_featured: z.boolean().default(false),
   allow_backorders: z.boolean().default(false),
@@ -140,6 +134,7 @@ interface SizeOption {
   name: string
   additional_price: number
   stock: number
+  weight: number
 }
 
 interface ProductImage {
@@ -159,9 +154,9 @@ export default function AddProduct() {
   const [productImages, setProductImages] = useState<ProductImage[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const [sizeOptions, setSizeOptions] = useState<SizeOption[]>([
-    { id: "1", name: "Standard", additional_price: 0, stock: 0 }
+    { id: "1", name: "Standard", additional_price: 0, stock: 0, weight: 0 }
   ])
-  const [newSize, setNewSize] = useState({ name: "", additional_price: 0, stock: 0 })
+  const [newSize, setNewSize] = useState({ name: "", additional_price: 0, stock: 0, weight: 0 })
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(ProductFormSchema),
@@ -279,10 +274,11 @@ export default function AddProduct() {
         id: Date.now().toString(),
         name: newSize.name,
         additional_price: newSize.additional_price,
-        stock: newSize.stock
+        stock: newSize.stock,
+        weight: newSize.weight,
       }
     ])
-    setNewSize({ name: "", additional_price: 0, stock: 0 })
+    setNewSize({ name: "", additional_price: 0, stock: 0, weight: 0 })
 
     toast({
       title: "Size added",
@@ -660,7 +656,7 @@ export default function AddProduct() {
 
               {/* Pricing & Stock Tab */}
               <TabsContent value="pricing" className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <DefaultFormTextField
                     form={form}
                     name="base_price"
@@ -680,15 +676,6 @@ export default function AddProduct() {
                     step="0.01"
                     disabled={isSubmitting}
                   />
-
-                  <DefaultFormTextField
-                    form={form}
-                    name="stock_quantity"
-                    label="Stock Quantity"
-                    placeholder="0"
-                    type="number"
-                    disabled={isSubmitting}
-                  />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -697,16 +684,6 @@ export default function AddProduct() {
                     name="sku"
                     label="SKU (Stock Keeping Unit)"
                     placeholder="PROD-001"
-                    disabled={isSubmitting}
-                  />
-
-                  <DefaultFormTextField
-                    form={form}
-                    name="weight"
-                    label="Weight (kg)"
-                    placeholder="0.00"
-                    type="number"
-                    step="0.01"
                     disabled={isSubmitting}
                   />
                 </div>
@@ -724,7 +701,7 @@ export default function AddProduct() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                      <div>
+                      <div className="col-span-2">
                         <label className="text-sm font-medium mb-2 block">
                           Size Name
                         </label>
@@ -751,6 +728,34 @@ export default function AddProduct() {
                           disabled={isSubmitting}
                         />
                       </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">
+                          Weight (Kg)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={newSize.weight}
+                          onChange={(e) => setNewSize({ ...newSize, weight: parseFloat(e.target.value) || 0 })}
+                          placeholder="0.00"
+                          className="w-full px-3 py-2 border rounded-md text-sm"
+                          disabled={isSubmitting}
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">
+                          Stock Quantity
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={newSize.stock}
+                          onChange={(e) => setNewSize({ ...newSize, stock: parseFloat(e.target.value) || 0 })}
+                          placeholder="0.00"
+                          className="w-full px-3 py-2 border rounded-md text-sm"
+                          disabled={isSubmitting}
+                        />
+                      </div>
                       <div className="flex items-end sm:col-span-2 lg:col-span-1">
                         <Button
                           type="button"
@@ -768,19 +773,21 @@ export default function AddProduct() {
                       <div className="border rounded-md overflow-x-auto">
                         <div className="min-w-[500px]">
                           <div className="grid grid-cols-12 gap-4 p-3 sm:p-4 border-b bg-muted/50">
-                            <div className="col-span-5 font-medium text-sm">Size Option</div>
-                            <div className="col-span-4 font-medium text-sm">Additional Price</div>
-                            <div className="col-span-3 font-medium text-sm">Actions</div>
+                            <div className="col-span-4 font-medium text-sm">Size Option</div>
+                            <div className="col-span-2 font-medium text-sm">Additional Price</div>
+                            <div className="col-span-2 font-medium text-sm">Weight</div>
+                            <div className="col-span-2 font-medium text-sm">Stock</div>
+                            <div className="col-span-2 font-medium text-sm">Actions</div>
                           </div>
                           {sizeOptions.map((size, index) => (
                             <div key={size.id} className="grid grid-cols-12 gap-4 p-3 sm:p-4 border-b last:border-0">
-                              <div className="col-span-5 flex items-center">
+                              <div className="col-span-4 flex items-center">
                                 <Badge variant="secondary" className="mr-2 text-xs">
                                   {index + 1}
                                 </Badge>
                                 <span className="text-sm truncate">{size.name}</span>
                               </div>
-                              <div className="col-span-4 flex items-center">
+                              <div className="col-span-2 flex items-center">
                                 {size.additional_price > 0 ? (
                                   <span className="text-green-600 font-medium text-sm">
                                     +${size.additional_price.toFixed(2)}
@@ -789,7 +796,13 @@ export default function AddProduct() {
                                   <span className="text-muted-foreground text-sm">No charge</span>
                                 )}
                               </div>
-                              <div className="col-span-3">
+                              <div className="col-span-2 flex items-center">
+                                <span className="text-muted-foreground text-sm">{size.weight} Kg(s)</span>
+                              </div>
+                              <div className="col-span-2 flex items-center">
+                                <span className="text-muted-foreground text-sm">{size.stock}</span>
+                              </div>
+                              <div className="col-span-2">
                                 <Button
                                   type="button"
                                   variant="ghost"
