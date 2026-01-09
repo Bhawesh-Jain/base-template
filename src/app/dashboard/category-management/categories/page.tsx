@@ -10,6 +10,8 @@ import formatDate from "@/lib/utils/date";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Category } from "@/lib/repositories/categoryRepository";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 
 export default function CategoryListPage() {
@@ -18,6 +20,7 @@ export default function CategoryListPage() {
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<any>(null);
   const { showError } = useGlobalDialog();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!reload) return;
@@ -58,7 +61,7 @@ export default function CategoryListPage() {
       });
 
       try {
-        const result = await updateCategoryStatus({ field, status: checked? '1': '0', categoryId: id.toString() });
+        const result = await updateCategoryStatus({ field, status: checked ? '1' : '0', categoryId: id.toString() });
         if (!result.success) {
           setItems(prevItems => {
             return prevItems.map(item =>
@@ -158,13 +161,15 @@ export default function CategoryListPage() {
           <CardHeader>
             <div className="flex flex-row justify-between items-center">
               <div className="flex flex-col space-y-1.5">
-                <CardTitle>Course Management</CardTitle>
-                <CardDescription>Manage your courses</CardDescription>
+                <CardTitle>Category Management</CardTitle>
+                <CardDescription>Manage your categories</CardDescription>
               </div>
 
-              <Button variant="outline" onClick={() => setSelected(null)}>
-                Add New Category
-              </Button>
+              <Link href={`${pathname}/add?h=Add Category`}>
+                <Button onClick={() => setSelected(null)}>
+                  Add New
+                </Button>
+              </Link>
             </div>
           </CardHeader>
           <CardContent>
